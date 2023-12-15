@@ -3,7 +3,7 @@ import { Results } from "./results";
 const Page = () => {
   return (
     <div>
-      <h2>Hello!</h2>
+      <h1 className="text-3xl text-center my-3">Welcome to this app!</h1>
       <Results />
     </div>
   );

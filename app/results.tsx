@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { TResult } from "./types";
 import { asyncLoop } from "./utils";
 import { processVoucher } from "./lib";
+import Modal from "./modal";
 
 export const Results = () => {
   const [results, setResults] = useState<TResult[]>([]);
+  const [modalResult, setShowModal] = useState<TResult | null>(null);
 
   useEffect(() => {
     const asyncLoopSave = async (
@@ -33,14 +35,27 @@ export const Results = () => {
         {results.length < 10 && <p>Loading...</p>}
         {results.length === 10 && <p>¡DONE!</p>}
       </div>
-      <div className="flex gap-3 p-3 justify-center items-center">
+
+      {modalResult && (
+        <Modal setShowModal={setShowModal}>
+          <pre className="whitespace-break-spaces	">
+            {JSON.stringify(modalResult, null, 2)}
+          </pre>
+        </Modal>
+      )}
+      <div className="flex flex-wrap gap-3 p-3 justify-center items-center">
         {results.map((result, index) => (
-          <div className="border-2 p-3" key={`${result.fileName}_${index}`}>
-            <strong>{index + 1}</strong>
-            <p>{result.fileName}</p>
-            <p>{result.status}</p>
-            <p>{result.time}</p>
-          </div>
+          <Fragment key={`${result.fileName}_${index}`}>
+            <div
+              className="border-2 p-3 cursor-pointer hover:bg-gray-100"
+              onClick={() => setShowModal(result)}
+            >
+              <strong>{index + 1}</strong>
+              <p>{result.fileName}</p>
+              <p>{result.status}</p>
+              <p>{result.time}</p>
+            </div>
+          </Fragment>
         ))}
       </div>
     </>
